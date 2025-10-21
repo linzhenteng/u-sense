@@ -1,1 +1,1232 @@
-<H1>感知型智慧旅遊平台</H1>
+<H1>很遊SensE嘛～感知型智慧旅遊平台</H1>
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SmartTrip Core - 感知型智慧旅遊平台</title>
+    <!-- 引入 Tailwind CSS 確保基礎元件美觀與響應式設計 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* =======================================================
+           ** 溫馨咖啡廳風格 CSS **
+           ======================================================= */
+        :root {
+            --light-bg: #f8f8f8; /* 淺色主背景 */
+            --paper-bg: #ffffff; /* 紙張/卡片背景 */
+            --accent-cozy: #ffb3b3; /* 溫暖的粉紅/蛋糕色 */
+            --accent-dark: #a87676; /* 溫暖的深色文字 */
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --gradient-start: #ffe0b2; /* 奶油漸層起點 */
+            --gradient-end: #ffccbc; /* 奶油漸層終點 */
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--accent-dark);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* 主容器和排版 */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+        @media (min-width: 1024px) {
+            .container {
+                grid-template-columns: 300px 1fr; /* 側邊欄 + 主內容 */
+            }
+        }
+
+        /* 標題與按鈕 */
+        .header-section {
+            background-color: var(--paper-bg);
+            box-shadow: var(--shadow-soft);
+            border-radius: var(--border-radius);
+            padding: 1rem;
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header-section h1 {
+            color: var(--accent-dark);
+            margin: 0;
+            font-size: 1.8rem;
+        }
+
+        /* 側邊欄 (像菜單一樣) */
+        .sidebar {
+            background-color: var(--paper-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+        }
+        .sidebar h2 {
+            font-size: 1.25rem;
+            color: var(--accent-cozy);
+            border-bottom: 2px solid var(--gradient-end);
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+
+        /* 表單元件 */
+        .cozy-input, .cozy-select {
+            width: 100%;
+            padding: 10px 12px;
+            margin-bottom: 15px;
+            border: 1px solid #f0e6e6; /* 柔和邊框 */
+            border-radius: 8px;
+            background-color: #fcfcfc;
+            color: var(--accent-dark);
+            transition: all 0.3s;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+        .cozy-input:focus, .cozy-select:focus {
+            outline: none;
+            border-color: var(--accent-cozy);
+            box-shadow: 0 0 0 3px rgba(255, 179, 179, 0.3);
+        }
+        label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: 5px;
+            color: var(--accent-dark);
+        }
+
+        /* 按鈕風格 (奶油漸層) */
+        .cozy-button {
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            background-image: linear-gradient(45deg, var(--gradient-start), var(--gradient-end));
+            color: var(--accent-dark);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        }
+        .cozy-button:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        .cozy-button.primary {
+            background-image: linear-gradient(45deg, #ff9800, #ff5722); /* 暖橘色強調 */
+            color: white;
+        }
+
+        /* 景點卡片區 (像蛋糕陳列櫃) */
+        .spot-card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            background-color: var(--paper-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            min-height: 200px;
+        }
+        .spot-card {
+            background-color: #fffaf0; /* 奶油白色 */
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(255, 179, 179, 0.4); /* 粉紅柔和陰影 */
+            padding: 15px;
+            border: 1px solid #ffe0b2;
+            transition: transform 0.3s;
+            position: relative;
+            cursor: pointer;
+        }
+        .spot-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 8px 20px rgba(255, 179, 179, 0.6);
+        }
+        .spot-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 2px solid var(--accent-cozy);
+        }
+        .add-to-itinerary {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--accent-cozy);
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+        
+        /* 景點詳細與地圖 */
+        .spot-detail-map {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+        @media (min-width: 768px) {
+            .spot-detail-map {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .spot-detail, .map-display {
+            background-color: var(--paper-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            height: 450px; /* 增加高度以容納更多內容 */
+            overflow-y: auto;
+        }
+        #map {
+            width: 100%;
+            height: 100%;
+            background-color: #e0f2f1; /* 淺綠色佔位符 */
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6d4c41;
+            font-weight: bold;
+        }
+        
+        /* Loading Indicator */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            border-radius: var(--border-radius);
+            font-weight: bold;
+            color: var(--accent-dark);
+            z-index: 50;
+        }
+        
+        /* Weather Card */
+        #weatherDisplay {
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #90caf9;
+        }
+        .weather-status {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e88e5;
+        }
+
+        /* Modal 樣式 (維持不變) */
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0, 0, 0, 0.4); padding-top: 50px; }
+        .modal-content { margin: 5% auto; width: 90%; max-width: 650px; position: relative; background-color: var(--paper-bg); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow-soft); }
+
+    </style>
+</head>
+<body>
+
+    <!-- 標題區 -->
+    <header class="header-section">
+        <h1>🍰 SmartTrip Core - 智慧旅遊平台</h1>
+        <button id="openPlannerModal" class="cozy-button">📝 規劃/自訂行程</button>
+    </header>
+
+    <div class="container">
+        <!-- 側邊欄 - API設定、城市選單、排程清單 -->
+        <aside class="sidebar">
+            <h2>⚙️ 系統與排程</h2>
+            
+            <!-- API 設定區 -->
+            <div class="api-setting mb-6">
+                <label for="apiKey">Gemini API Key：</label>
+                <input type="password" id="apiKey" class="cozy-input" placeholder="輸入您的 API Key">
+                <button id="validateApiKey" class="cozy-button w-full mb-3">驗證並儲存</button>
+                <p id="apiStatus" class="text-sm font-semibold"></p>
+            </div>
+
+            <hr class="border-gray-200 my-4">
+
+            <!-- 城市選擇與日期設定區 -->
+            <div class="city-selection mb-6">
+                <label for="citySelect">🌍 選擇城市/地區：</label>
+                <select id="citySelect" class="cozy-select">
+                    <option value="">請選擇城市</option>
+                </select>
+                
+                <label for="travelDateInput" class="mt-4">📅 旅遊日期：</label>
+                <input type="date" id="travelDateInput" class="cozy-input" />
+
+                <!-- 天氣預測顯示區 -->
+                <div id="weatherDisplay">
+                    <h3 class="font-bold text-gray-700 mb-1">🌤️ 天氣預測 (當地)</h3>
+                    <p id="weatherStatus" class="weather-status">請選擇城市與日期</p>
+                    <p id="weatherDetails" class="text-sm text-gray-600 mt-1"></p>
+                </div>
+            </div>
+
+            <!-- 排程清單區 -->
+            <div class="itinerary-planning">
+                <h2>📋 已選排程清單</h2>
+                <div id="itineraryListContainer" class="min-h-10 p-2 bg-white rounded-lg shadow-inner border border-gray-100">
+                    <p class="text-xs text-gray-500">點擊景點卡片上的 '+' 號新增</p>
+                </div>
+                
+                <hr class="border-gray-200 my-4">
+
+                <div class="relative">
+                    <button id="generateSchedule" class="cozy-button primary w-full">🚀 AI 生成最佳動線</button>
+                    <div id="scheduleLoading" class="loading-overlay">AI 正在規劃中...</div>
+                </div>
+            </div>
+            
+        </aside>
+
+        <!-- 主要內容區 -->
+        <section class="main-content">
+            
+            <!-- 景點探索區 - 查詢框 -->
+            <h2 class="text-2xl font-bold mb-4 text-gray-700">🔍 景點探索與即時推薦</h2>
+            <div class="flex gap-2 mb-4">
+                <input type="text" id="spotSearchInput" class="cozy-input m-0 flex-grow" placeholder="景點名稱、美食餐廳或活動名稱 (額外查詢)">
+                <button id="searchSpotsBtn" class="cozy-button w-32 primary">查詢 (AI)</button>
+            </div>
+            
+            <!-- 景點卡片區 -->
+            <div id="spotsContainer" class="spot-card-grid">
+                <p class="text-center col-span-full py-10 text-gray-400">請先選擇左側城市，AI 將自動為您推薦景點。</p>
+            </div>
+
+            <!-- 景點資訊與地圖展示區 -->
+            <div class="spot-detail-map mt-6">
+                <!-- 景點資訊展示區 (AI 導覽內容) -->
+                <div id="spotDetail" class="spot-detail">
+                    <h2 class="text-xl font-bold mb-2 text-red-500">📖 景點資訊與 AI 導覽</h2>
+                    <p class="text-gray-500">點擊上方的景點卡片查看詳細介紹、地圖座標，並查看 AI 生成的圖片。</p>
+                    <div id="dynamicContent" class="mt-4"></div>
+                </div>
+
+                <!-- 地圖展示區 (動線視覺化) -->
+                <div id="mapDisplay" class="map-display">
+                    <h2 class="text-xl font-bold mb-2 text-red-500">🧭 動線與地圖</h2>
+                    <div id="map">
+                        地圖 API 佔位區 (顯示景點定位或排程動線)
+                    </div>
+                </div>
+            </div>
+
+            <!-- 心境回饋區 (動態調整行程) -->
+            <div class="py-4 mt-6 p-4 rounded-xl shadow-lg" style="background-color: #fff0f5;">
+                <h3 class="text-lg font-bold mb-3 text-pink-600">💖 即時心境回饋 (用於動態調整)</h3>
+                <div class="flex flex-wrap gap-3">
+                    <button class="cozy-button" onclick="sendFeedback('tired')">😫 有點累</button>
+                    <button class="cozy-button" onclick="sendFeedback('photo')">📸 想拍照</button>
+                    <button class="cozy-button" onclick="sendFeedback('relax')">😌 想放鬆</button>
+                    <button class="cozy-button" onclick="sendFeedback('hungry')">🍕 肚子餓了</button>
+                </div>
+                <p id="feedbackStatus" class="text-sm mt-3 text-gray-600"></p>
+            </div>
+
+        </section>
+    </div>
+
+    <!-- 規劃/自訂行程 Modal 表單 -->
+    <div id="plannerModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button absolute top-3 right-5 text-gray-500 hover:text-red-500 cursor-pointer text-2xl">&times;</span>
+            <h2 class="text-2xl font-bold mb-4">📝 旅遊規劃與自訂</h2>
+            
+            <form id="plannerForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                
+                <div class="col-span-full">
+                    <label for="planCity">城市名稱：</label>
+                    <input type="text" id="planCity" required class="cozy-input" placeholder="請填寫城市全名，例如：臺北市">
+                </div>
+
+                <div>
+                    <label for="planDays">遊玩天數：</label>
+                    <input type="number" id="planDays" required class="cozy-input" min="1" value="3">
+                </div>
+
+                <div>
+                    <label for="planStyle">旅遊風格：</label>
+                    <select id="planStyle" required class="cozy-select">
+                        <option value="cultural">文化深度</option>
+                        <option value="adventure">戶外探險</option>
+                        <option value="leisure">輕鬆慢活</option>
+                        <option value="foodie">美食探索</option>
+                    </select>
+                </div>
+
+                <hr class="col-span-full my-3 border-gray-200">
+
+                <h3 class="col-span-full text-lg font-semibold text-gray-600">新增景點 (到目前的城市)</h3>
+
+                <div>
+                    <label for="newSpotName">景點名稱：</label>
+                    <input type="text" id="newSpotName" class="cozy-input" placeholder="例如：故宮博物院">
+                </div>
+                
+                <div>
+                    <label for="newSpotCoords">座標 (緯度, 經度)：</label>
+                    <input type="text" id="newSpotCoords" class="cozy-input" placeholder="例如：25.1017, 121.5484">
+                </div>
+                
+                <div class="col-span-full">
+                    <button type="button" id="addNewSpot" class="cozy-button w-full">＋ 新增景點至城市資料</button>
+                </div>
+                
+                <div class="col-span-full mt-4">
+                    <h3 class="font-semibold mb-2">已儲存城市列表</h3>
+                    <ul id="cityListDisplay" class="text-sm list-disc pl-5">
+                        <!-- 城市列表將動態顯示 -->
+                    </ul>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script type="module">
+        // =======================================================
+        // ** 核心數據結構與 LocalStorage 管理 **
+        // =======================================================
+        const LOCAL_STORAGE_KEY = 'smartTripCoreData';
+        
+        // 台灣縣市列表
+        const TAIWAN_CITIES = {
+            'TPE': { name: '臺北市', days: 3, style: 'cultural', spots: [{ name: '台北 101', coords: '25.0330, 121.5654', intro: '', imgUrl: 'placeholder' }]},
+            'NTP': { name: '新北市', days: 3, style: 'adventure', spots: [{ name: '九份老街', coords: '25.1092, 121.8488', intro: '', imgUrl: 'placeholder' }]},
+            'TYC': { name: '桃園市', days: 2, style: 'leisure', spots: [{ name: 'Xpark 水族館', coords: '25.0116, 121.2238', intro: '', imgUrl: 'placeholder' }]},
+            'TXG': { name: '臺中市', days: 3, style: 'foodie', spots: [{ name: '臺中國家歌劇院', coords: '24.1627, 120.6409', intro: '', imgUrl: 'placeholder' }]},
+            'TNN': { name: '臺南市', days: 4, style: 'cultural', spots: [{ name: '赤崁樓', coords: '22.9972, 120.2038', intro: '', imgUrl: 'placeholder' }]},
+            'KHH': { name: '高雄市', days: 3, style: 'leisure', spots: [{ name: '駁二藝術特區', coords: '22.6225, 120.2831', intro: '', imgUrl: 'placeholder' }]},
+            'KLC': { name: '基隆市', days: 1, style: 'foodie', spots: [{ name: '基隆廟口夜市', coords: '25.1322, 121.7456', intro: '', imgUrl: 'placeholder' }]},
+            'HSC': { name: '新竹市', days: 2, style: 'cultural', spots: [{ name: '新竹城隍廟', coords: '24.8055, 120.9675', intro: '', imgUrl: 'placeholder' }]},
+            'HSZ': { name: '新竹縣', days: 2, style: 'adventure', spots: [{ name: '內灣老街', coords: '24.7088, 121.1969', intro: '', imgUrl: 'placeholder' }]},
+            'MLI': { name: '苗栗縣', days: 2, style: 'leisure', spots: [{ name: '三義木雕博物館', coords: '24.3806, 120.7634', intro: '', imgUrl: 'placeholder' }]},
+            'CHW': { name: '彰化縣', days: 2, style: 'cultural', spots: [{ name: '鹿港小鎮', coords: '24.0537, 120.4357', intro: '', imgUrl: 'placeholder' }]},
+            'NTO': { name: '南投縣', days: 3, style: 'adventure', spots: [{ name: '日月潭', coords: '23.8967, 120.9123', intro: '', imgUrl: 'placeholder' }]},
+            'YLH': { name: '雲林縣', days: 2, style: 'foodie', spots: [{ name: '北港朝天宮', coords: '23.5759, 120.3013', intro: '', imgUrl: 'placeholder' }]},
+            'CYI': { name: '嘉義市', days: 1, style: 'cultural', spots: [{ name: '嘉義阿里山', coords: '23.5100, 120.8143', intro: '', imgUrl: 'placeholder' }]},
+            'CYC': { name: '嘉義縣', days: 2, style: 'adventure', spots: [{ name: '高跟鞋教堂', coords: '23.4735, 120.1557', intro: '', imgUrl: 'placeholder' }]},
+            'PFT': { name: '屏東縣', days: 3, style: 'leisure', spots: [{ name: '墾丁國家公園', coords: '21.9463, 120.7937', intro: '', imgUrl: 'placeholder' }]},
+            'ILA': { name: '宜蘭縣', days: 2, style: 'relax', spots: [{ name: '清水地熱公園', coords: '24.6300, 121.7100', intro: '', imgUrl: 'placeholder' }]},
+            'HLN': { name: '花蓮縣', days: 3, style: 'adventure', spots: [{ name: '太魯閣國家公園', coords: '24.1609, 121.6373', intro: '', imgUrl: 'placeholder' }]},
+            'TTT': { name: '臺東縣', days: 3, style: 'leisure', spots: [{ name: '伯朗大道', coords: '23.0900, 121.2100', intro: '', imgUrl: 'placeholder' }]},
+            'PNH': { name: '澎湖縣', days: 3, style: 'adventure', spots: [{ name: '七美雙心石滬', coords: '23.2384, 119.4184', intro: '', imgUrl: 'placeholder' }]},
+            'KMN': { name: '金門縣', days: 2, style: 'cultural', spots: [{ name: '莒光樓', coords: '24.4285, 118.3184', intro: '', imgUrl: 'placeholder' }]},
+            'LCH': { name: '連江縣(馬祖)', days: 2, style: 'adventure', spots: [{ name: '東引燈塔', coords: '26.3768, 120.4907', intro: '', imgUrl: 'placeholder' }]}
+        };
+        
+        let config = {
+            apiKey: '',
+            currentCityKey: '',
+            currentDate: '', // 新增旅遊日期狀態
+            itinerary: [],
+            cities: TAIWAN_CITIES 
+        };
+
+        function saveConfig() {
+            localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify({
+                apiKey: config.apiKey,
+                cities: config.cities,
+                itinerary: config.itinerary
+            }));
+            renderItineraryList();
+            renderCitySelect();
+            renderCityListDisplay();
+        }
+
+        function loadConfig() {
+            const storedData = localStorage.getItem(LOCAL_STORAGE_KEY);
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                config.apiKey = data.apiKey || '';
+                config.cities = { ...TAIWAN_CITIES, ...data.cities };
+                config.itinerary = data.itinerary || [];
+            }
+            document.getElementById('apiKey').value = config.apiKey;
+            if (config.apiKey) {
+                document.getElementById('apiStatus').textContent = 'API Key 已載入 (未驗證)';
+                document.getElementById('apiStatus').style.color = 'orange';
+            }
+
+            // 初始化旅遊日期為今日
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0'); // 月份從 0 開始
+            const dd = String(today.getDate()).padStart(2, '0');
+            config.currentDate = `${yyyy}-${mm}-${dd}`;
+            document.getElementById('travelDateInput').value = config.currentDate;
+        }
+        
+        // =======================================================
+        // ** UI 渲染功能 **
+        // =======================================================
+
+        // 渲染城市選單
+        const citySelect = document.getElementById('citySelect');
+        function renderCitySelect() {
+            citySelect.innerHTML = '<option value="">請選擇城市</option>';
+            const sortedCityKeys = Object.keys(config.cities).sort((a, b) => config.cities[a].name.localeCompare(config.cities[b].name, 'zh-TW'));
+            
+            sortedCityKeys.forEach(key => {
+                const city = config.cities[key];
+                const option = new Option(city.name, key);
+                citySelect.add(option);
+            });
+            citySelect.value = config.currentCityKey;
+        }
+
+        // 渲染景點卡片
+        const spotsContainer = document.getElementById('spotsContainer');
+        function renderSpotCards(spots = [], isSearchResults = false, cityKey = '') {
+            spotsContainer.innerHTML = '';
+            
+            if (spots.length === 0) {
+                spotsContainer.innerHTML = `<p class="text-center col-span-full py-10 text-gray-400">
+                    ${isSearchResults ? '找不到相關景點。' : '請先選擇左側城市，AI 將自動為您推薦景點。'}
+                </p>`;
+                return;
+            }
+
+            spots.forEach((spot, index) => {
+                const uniqueId = `${cityKey}-${index}-${spot.name}`;
+                
+                const card = document.createElement('div');
+                card.className = 'spot-card';
+                card.innerHTML = `
+                    <img src="https://placehold.co/400x180/ffccbc/a87676?text=${spot.name}" onerror="this.onerror=null; this.src='https://placehold.co/400x180/ffccbc/a87676?text=${spot.name}';">
+                    <h3 class="text-lg font-bold text-gray-800 mb-1">${spot.name}</h3>
+                    <p class="text-sm text-gray-600 truncate">${spot.intro || '點擊查看 AI 生成的介紹...'}</p>
+                    <button class="add-to-itinerary" data-unique-id="${uniqueId}" data-spot-name="${spot.name}" data-coords="${spot.coords || '25.0000, 121.0000'}">+</button>
+                `;
+                card.addEventListener('click', () => displaySpotDetail(spot));
+                spotsContainer.appendChild(card);
+            });
+        }
+
+        // 渲染已選排程清單 (邏輯不變)
+        const itineraryListContainer = document.getElementById('itineraryListContainer');
+        function renderItineraryList() {
+            itineraryListContainer.innerHTML = '';
+            if (config.itinerary.length === 0) {
+                itineraryListContainer.innerHTML = '<p class="text-xs text-gray-500">點擊景點卡片上的 '+' 號新增</p>';
+                return;
+            }
+
+            config.itinerary.forEach((item, index) => {
+                const cityName = config.cities[item.cityKey]?.name || '未知城市';
+                const listItem = document.createElement('div');
+                listItem.className = 'itinerary-item flex justify-between items-center p-2 my-1 bg-white rounded-md shadow-sm border border-gray-100';
+                listItem.innerHTML = `
+                    <span class="font-semibold text-sm">${index + 1}. ${item.name} (${cityName})</span>
+                    <button data-index="${index}" class="text-red-500 hover:text-red-700 font-bold text-lg leading-none" onclick="removeFromItinerary(${index})">×</button>
+                `;
+                itineraryListContainer.appendChild(listItem);
+            });
+        }
+
+        // 顯示景點詳細資訊 (邏輯不變)
+        function displaySpotDetail(spot) {
+            const detailElement = document.getElementById('dynamicContent');
+            const mapElement = document.getElementById('map');
+            
+            const currentCityKey = spot.cityKey || config.currentCityKey || Object.keys(config.cities)[0];
+
+            detailElement.innerHTML = `
+                <h3 class="text-xl font-bold text-gray-700">${spot.name}</h3>
+                <p class="text-sm text-gray-500 mb-3">城市: ${config.cities[currentCityKey]?.name || '未知'} | 座標：${spot.coords}</p>
+                <p class="mb-4">${spot.intro || '點擊下方按鈕，讓 AI 為您生成導覽內容...'}</p>
+                <div class="flex flex-col md:flex-row gap-3">
+                    <button class="cozy-button w-full" onclick="generateContentAndImage('${currentCityKey}', '${spot.name}')">✨ 生成介紹與圖片</button>
+                    <button class="cozy-button w-full primary" onclick="speakContent('${spot.name}', '${spot.intro}')">🔊 播放語音導覽</button>
+                </div>
+                <div class="mt-4 p-3 bg-white rounded-lg border border-gray-100" id="generatedImageContainer">
+                    <p class="text-center text-sm text-gray-400">圖片將在此處顯示...</p>
+                    <img id="generatedImage" src="" style="display:none; width:100%; height:auto; border-radius: 8px;" alt="AI 生成景點圖片">
+                </div>
+            `;
+            
+            mapElement.innerHTML = `
+                <p class="text-center font-bold text-lg">定位：${spot.name}</p>
+                <p class="text-center text-sm">(${spot.coords})</p>
+                <p class="text-center text-xs mt-2 text-red-500">此為佔位符，實際地圖需串接地圖 API。</p>
+            `;
+        }
+        
+        // =======================================================
+        // ** 核心互動邏輯 **
+        // =======================================================
+
+        // 點選城市/日期改變時的總處理函數 (UPDATED)
+        citySelect.addEventListener('change', (e) => {
+            config.currentCityKey = e.target.value;
+            if (config.currentCityKey) {
+                fetchWeatherForecast();
+                fetchCityRecommendations();
+            } else {
+                spotsContainer.innerHTML = '<p class="text-center col-span-full py-10 text-gray-400">請先選擇左側城市，AI 將自動為您推薦景點。</p>';
+                document.getElementById('weatherStatus').textContent = '請選擇城市與日期';
+                document.getElementById('weatherDetails').textContent = '';
+            }
+        });
+        
+        document.getElementById('travelDateInput').addEventListener('change', (e) => {
+            config.currentDate = e.target.value;
+            if (config.currentCityKey) {
+                fetchWeatherForecast();
+                // 日期改變也應該影響推薦邏輯
+                fetchCityRecommendations();
+            }
+        });
+
+
+        // 點擊查詢按鈕 (用於額外查詢)
+        document.getElementById('searchSpotsBtn').addEventListener('click', () => {
+            const query = document.getElementById('spotSearchInput').value.trim();
+            if (query) {
+                searchSpots(query);
+            } else {
+                alertMessage('⚠️ 請輸入查詢關鍵字（景點或美食）！', 'orange');
+            }
+        });
+        document.getElementById('spotSearchInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const query = document.getElementById('spotSearchInput').value.trim();
+                if (query) {
+                    searchSpots(query);
+                } else {
+                    alertMessage('⚠️ 請輸入查詢關鍵字（景點或美食）！', 'orange');
+                }
+            }
+        });
+
+        // 從排程中移除 (邏輯不變)
+        window.removeFromItinerary = (index) => {
+            config.itinerary.splice(index, 1);
+            saveConfig();
+            alertMessage('景點已從排程清單移除。', 'red');
+        }
+
+        // =======================================================
+        // ** AI 核心邏輯 - 推薦、天氣與查詢 **
+        // =======================================================
+
+        /**
+         * 呼叫 Gemini API 進行城市推薦 (城市選擇後自動觸發)
+         */
+        async function fetchCityRecommendations() {
+            if (!config.apiKey || !config.currentCityKey) {
+                renderSpotCards([], false);
+                return;
+            }
+            
+            const city = config.cities[config.currentCityKey];
+            const date = config.currentDate;
+            
+            spotsContainer.innerHTML = `<p class="text-center col-span-full py-10 text-orange-500 font-bold">⏳ AI 正在結合即時觀光數據推薦 ${city.name} 的景點...</p>`;
+
+            const userQuery = `我在台灣 ${city.name} 旅遊，日期是 ${date}。請根據最新的觀光數據（例如人流、活動、天氣考量），推薦 5 個最相關、且最符合「${city.style}」風格的熱門地點。請提供地點名稱、簡短介紹（繁體中文），以及盡可能準確的座標 (緯度, 經度)。`;
+            const systemPrompt = "您是 SmartTrip Core AI 探索引擎，專門根據實時資訊（如觀光署開放資料）和旅遊日期進行智慧推薦。請務必使用繁體中文和嚴格的 JSON 格式回覆。";
+            
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "recommendations": {
+                                "type": "ARRAY",
+                                "description": "推薦地點列表",
+                                "items": {
+                                    "type": "OBJECT",
+                                    "properties": {
+                                        "name": { "type": "STRING", "description": "地點名稱" },
+                                        "intro": { "type": "STRING", "description": "簡短的繁體中文介紹" },
+                                        "coords": { "type": "STRING", "description": "座標 (緯度, 經度), 例如: 25.0330, 121.5654" }
+                                    },
+                                    "propertyOrdering": ["name", "intro", "coords"]
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            
+            await fetchGeminiApi(payload, (result) => {
+                try {
+                    const jsonResponse = JSON.parse(result.text);
+                    if (jsonResponse.recommendations && jsonResponse.recommendations.length > 0) {
+                        const spots = jsonResponse.recommendations.map(s => ({ ...s, cityKey: config.currentCityKey }));
+                        renderSpotCards(spots, true, config.currentCityKey);
+                    } else {
+                        renderSpotCards([], true);
+                    }
+                } catch (e) {
+                    alertMessage(`❌ AI 推薦解析失敗。錯誤: ${e.message}`, 'red');
+                    console.error('AI Recommendations failed:', e);
+                }
+            });
+        }
+
+
+        /**
+         * 呼叫 Gemini API 進行天氣查詢 (城市/日期改變後自動觸發)
+         */
+        async function fetchWeatherForecast() {
+            const city = config.cities[config.currentCityKey]?.name;
+            const date = config.currentDate;
+            const weatherStatusEl = document.getElementById('weatherStatus');
+            const weatherDetailsEl = document.getElementById('weatherDetails');
+
+            if (!config.apiKey) {
+                weatherStatusEl.textContent = '請先設定 API Key 才能查詢天氣。';
+                weatherDetailsEl.textContent = '';
+                return;
+            }
+            if (!city || !date) return;
+
+            weatherStatusEl.textContent = '⏳ 正在查詢天氣預報...';
+            weatherDetailsEl.textContent = '';
+            
+            const userQuery = `請查詢台灣 ${city} 在 ${date} 的天氣預報。請提供一個簡潔的中文摘要（例如：多雲時晴，降雨機率 30%）以及詳細的溫度範圍和旅行注意事項。`;
+            const systemPrompt = "您是 SmartTrip 氣象模擬 AI。請務必根據 Google Search 的最新資訊，使用繁體中文和嚴格的 JSON 格式回覆。";
+            
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "summary_tw": { "type": "STRING", "description": "天氣簡潔摘要，例如：多雲時晴" },
+                            "details_tw": { "type": "STRING", "description": "詳細資訊，包含溫度、降雨機率與旅行注意事項" },
+                            "icon": { "type": "STRING", "description": "天氣圖標（例如：☀️, 🌧️, ☁️）" }
+                        },
+                        "propertyOrdering": ["icon", "summary_tw", "details_tw"]
+                    }
+                }
+            };
+            
+            await fetchGeminiApi(payload, (result) => {
+                try {
+                    const jsonResponse = JSON.parse(result.text);
+                    weatherStatusEl.textContent = `${jsonResponse.icon} ${jsonResponse.summary_tw}`;
+                    weatherDetailsEl.textContent = jsonResponse.details_tw;
+                } catch (e) {
+                    weatherStatusEl.textContent = '❌ 天氣查詢失敗 (解析錯誤)';
+                    weatherDetailsEl.textContent = e.message;
+                    console.error('AI Weather failed:', e);
+                }
+            });
+        }
+
+
+        /**
+         * 呼叫 Gemini API 進行景點/美食搜尋 (使用者手動查詢)
+         */
+        async function searchSpots(query) {
+            if (!config.apiKey) {
+                alertMessage('❌ 請先在設定區輸入並驗證 Gemini API Key！', 'red');
+                return;
+            }
+            
+            const city = config.cities[config.currentCityKey];
+            
+            spotsContainer.innerHTML = `<p class="text-center col-span-full py-10 text-orange-500 font-bold">⏳ SmartTrip AI 正在結合即時資訊搜尋「${query}」...</p>`;
+
+            const userQuery = `我在台灣 ${city.name} 旅遊，日期是 ${config.currentDate}。我想找關於「${query}」的景點、美食或活動資訊。請根據最新的觀光數據（例如人流、活動、天氣考量），推薦 3 到 5 個最相關的地點。請提供地點名稱、一個簡短的介紹（繁體中文），以及盡可能準確的座標 (緯度, 經度)。`;
+            const systemPrompt = "您是 SmartTrip Core AI 探索引擎，專門根據實時資訊（如觀光署開放資料）進行智慧推薦。請務必使用繁體中文和嚴格的 JSON 格式回覆。";
+            
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "recommendations": {
+                                "type": "ARRAY",
+                                "description": "推薦地點列表",
+                                "items": {
+                                    "type": "OBJECT",
+                                    "properties": {
+                                        "name": { "type": "STRING", "description": "地點名稱" },
+                                        "intro": { "type": "STRING", "description": "簡短的繁體中文介紹" },
+                                        "coords": { "type": "STRING", "description": "座標 (緯度, 經度), 例如: 25.0330, 121.5654" }
+                                    },
+                                    "propertyOrdering": ["name", "intro", "coords"]
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            
+            await fetchGeminiApi(payload, (result) => {
+                try {
+                    const jsonResponse = JSON.parse(result.text);
+                    if (jsonResponse.recommendations && jsonResponse.recommendations.length > 0) {
+                        const spots = jsonResponse.recommendations.map(s => ({ ...s, cityKey: config.currentCityKey }));
+                        renderSpotCards(spots, true, config.currentCityKey);
+                    } else {
+                        renderSpotCards([], true);
+                    }
+                } catch (e) {
+                    alertMessage(`❌ AI 查詢解析失敗。錯誤: ${e.message}`, 'red');
+                    console.error('AI Search failed:', e);
+                }
+            });
+        }
+
+
+        /**
+         * 統一的 Gemini API 呼叫函數（包含重試機制）(邏輯不變)
+         */
+        async function fetchGeminiApi(payload, callback) {
+            const apiKey = config.apiKey;
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const MAX_RETRIES = 3;
+
+            for (let i = 0; i < MAX_RETRIES; i++) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.status === 429) {
+                        const delay = Math.pow(2, i) * 1000;
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        continue; // Retry
+                    }
+
+                    if (!response.ok) {
+                        throw new Error(`API 錯誤: ${response.statusText}`);
+                    }
+
+                    const result = await response.json();
+                    const candidate = result.candidates?.[0];
+                    if (candidate && candidate.content?.parts?.[0]?.text) {
+                        callback({ text: candidate.content.parts[0].text });
+                        return;
+                    } else {
+                        throw new Error('AI 回覆內容為空或結構不正確。');
+                    }
+
+                } catch (error) {
+                    if (i === MAX_RETRIES - 1) {
+                         alertMessage(`❌ 最終 API 呼叫失敗: ${error.message}`, 'red');
+                    }
+                }
+            }
+        }
+
+        // =======================================================
+        // ** 啟動與其他功能 (不變) **
+        // =======================================================
+        
+        // 點選景點卡片上的 + 號新增至排程 (邏輯不變)
+        spotsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('add-to-itinerary')) {
+                const spotName = e.target.dataset.spotName;
+                const coords = e.target.dataset.coords;
+                const cityKey = config.currentCityKey;
+                
+                if (!cityKey) {
+                    alertMessage('⚠️ 請先選擇城市才能加入排程。', 'orange');
+                    return;
+                }
+
+                if (config.itinerary.some(item => item.name === spotName && item.cityKey === cityKey)) {
+                    alertMessage('⚠️ 此景點已在排程清單中！', 'orange');
+                    return;
+                }
+
+                config.itinerary.push({ 
+                    cityKey: cityKey,
+                    name: spotName, 
+                    coords: coords 
+                });
+                
+                e.target.textContent = '✅';
+                e.target.style.backgroundColor = 'green';
+                e.target.disabled = true;
+
+                saveConfig();
+                alertMessage(`已將 ${spotName} 加入排程清單！`, 'green');
+            }
+        });
+
+        // 啟動應用
+        window.onload = () => {
+            loadConfig();
+            renderCitySelect();
+            renderItineraryList();
+            
+            // 如果有預設的城市，自動觸發推薦和天氣查詢
+            if (config.currentCityKey) {
+                fetchWeatherForecast();
+                fetchCityRecommendations();
+            }
+        };
+
+        // 其他功能 (Modal, 語音, 心境回饋, API Key驗證) 保持不變...
+        window.speakContent = (title, content) => {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(`${title} 導覽內容：${content}`);
+                const voices = speechSynthesis.getVoices();
+                const zhVoice = voices.find(v => v.lang.startsWith('zh-') || v.lang.startsWith('yue-'));
+                if (zhVoice) {
+                    utterance.voice = zhVoice;
+                }
+                utterance.lang = 'zh-TW';
+                speechSynthesis.speak(utterance);
+                alertMessage('🔊 正在播放語音導覽...', 'orange');
+            } else {
+                alertMessage('❌ 瀏覽器不支援語音合成。', 'red');
+            }
+        }
+        
+        window.sendFeedback = (mood) => {
+            const feedbackStatus = document.getElementById('feedbackStatus');
+            const city = config.cities[config.currentCityKey];
+            if (!city) {
+                feedbackStatus.textContent = "請先選擇一個城市！";
+                return;
+            }
+            
+            feedbackStatus.textContent = `收到您的回饋：「${mood}」，AI 正在根據即時天氣/人流數據及您的心境，準備建議下一站...`;
+            feedbackStatus.style.color = 'blue';
+
+            setTimeout(() => {
+                 feedbackStatus.textContent = `✅ AI 建議：下一站推薦「${mood === 'tired' ? '附近的咖啡廳休憩' : mood === 'photo' ? '最佳拍照點' : '當前行程不變'}」。 (動態調整模擬)`;
+                 feedbackStatus.style.color = 'green';
+            }, 1500);
+        }
+
+        const modal = document.getElementById("plannerModal");
+        document.getElementById("openPlannerModal").onclick = () => { modal.style.display = "block"; renderCityListDisplay(); }
+        document.querySelector(".close-button").onclick = () => { modal.style.display = "none"; }
+        window.onclick = (event) => { if (event.target == modal) { modal.style.display = "none"; } }
+
+        const cityListDisplay = document.getElementById('cityListDisplay');
+        function renderCityListDisplay() {
+            cityListDisplay.innerHTML = '';
+            Object.keys(config.cities).forEach(key => {
+                const city = config.cities[key];
+                const isDefault = TAIWAN_CITIES[key] !== undefined; 
+                const deleteBtn = isDefault ? '' : `<button class="text-xs text-red-500 ml-2" onclick="deleteCity('${key}')">(刪除)</button>`;
+                
+                const li = document.createElement('li');
+                li.innerHTML = `${city.name} (${city.spots.length} 景點) ${deleteBtn}`;
+                cityListDisplay.appendChild(li);
+            });
+        }
+        window.deleteCity = (cityKey) => {
+            if (TAIWAN_CITIES[cityKey]) {
+                alertMessage('❌ 預設城市無法刪除！', 'red');
+                return;
+            }
+            if (confirm(`確定要刪除城市 ${config.cities[cityKey].name} 及其所有景點嗎？`)) {
+                delete config.cities[cityKey];
+                config.currentCityKey = '';
+                saveConfig();
+                renderSpotCards([]); 
+            }
+        }
+
+        document.getElementById('addNewSpot').addEventListener('click', () => {
+            const cityKeyName = document.getElementById('planCity').value.trim();
+            const spotName = document.getElementById('newSpotName').value.trim();
+            const spotCoords = document.getElementById('newSpotCoords').value.trim();
+            
+            if (!cityKeyName || !spotName || !spotCoords) {
+                alertMessage('❌ 請輸入完整的城市、景點名稱和座標！', 'red');
+                return;
+            }
+
+            let existingKey = Object.keys(config.cities).find(key => config.cities[key].name === cityKeyName);
+            if (!existingKey) {
+                existingKey = cityKeyName.substring(0, 3).toUpperCase();
+                config.cities[existingKey] = {
+                    name: cityKeyName,
+                    days: parseInt(document.getElementById('planDays').value) || 3,
+                    style: document.getElementById('planStyle').value || 'cultural',
+                    spots: []
+                };
+            }
+
+            config.cities[existingKey].spots.push({
+                name: spotName,
+                coords: spotCoords,
+                intro: '',
+                imgUrl: 'placeholder'
+            });
+
+            saveConfig();
+            alertMessage(`✅ 景點 ${spotName} 已新增至 ${cityKeyName}！`, 'green');
+            document.getElementById('newSpotName').value = '';
+            document.getElementById('newSpotCoords').value = '';
+            
+            if (config.currentCityKey === existingKey) {
+                 fetchCityRecommendations();
+            }
+        });
+        
+        function alertMessage(message, color) {
+            const statusElement = document.createElement('div');
+            statusElement.className = `fixed top-4 right-4 p-3 rounded-lg shadow-xl font-bold z-50 text-white`;
+            statusElement.style.backgroundColor = color === 'green' ? '#4CAF50' : 
+                                                  color === 'red' ? '#F44336' : 
+                                                  color === 'orange' ? '#FF9800' : 'gray';
+            statusElement.textContent = message;
+            document.body.appendChild(statusElement);
+            setTimeout(() => {
+                statusElement.remove();
+            }, 3000);
+        }
+
+        window.generateContentAndImage = async (cityKey, spotName) => {
+             if (!config.apiKey) {
+                alertMessage('❌ 請先在設定區輸入並驗證 Gemini API Key！', 'red');
+                return;
+            }
+
+            const city = config.cities[cityKey]?.name || '未知城市';
+            const detailElement = document.getElementById('dynamicContent');
+            const imageContainer = document.getElementById('generatedImageContainer');
+            
+            detailElement.innerHTML = `<p class="text-orange-500 font-bold mt-2">⏳ AI 正在為 ${spotName} 撰寫介紹與生成圖片...</p>`;
+            imageContainer.innerHTML = '<p class="text-center text-orange-500">圖片生成中...</p>';
+
+            const userQuery = `為 ${city} 的 ${spotName} 景點，撰寫一篇 80 字的簡潔導覽介紹。請同時為我生成一張能用於圖片生成模型 (Image Generation Model) 的英文提示詞 (Prompt)，描述該景點在晴朗天氣下的美麗全景，風格為「水彩插畫」。`;
+            const systemPrompt = "您是一個專業的旅遊 AI 導遊。請根據用戶要求，使用繁體中文和嚴格的 JSON 格式回覆，並基於您最新的知識庫（包含實時資訊）來回答。";
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "description_tw": { "type": "STRING", "description": "景點的繁體中文導覽介紹" },
+                            "image_prompt_en": { "type": "STRING", "description": "用於生成圖片的英文提示詞" }
+                        },
+                        "propertyOrdering": ["description_tw", "image_prompt_en"]
+                    }
+                }
+            };
+            
+            await fetchGeminiApi(payload, (result) => {
+                try {
+                    const jsonResponse = JSON.parse(result.text);
+                    const newIntro = jsonResponse.description_tw;
+                    
+                    const spot = { name: spotName, intro: newIntro, coords: 'N/A' };
+                    displaySpotDetail(spot); 
+                    
+                    generateImage(jsonResponse.image_prompt_en);
+
+                } catch (e) {
+                    detailElement.innerHTML = `<p class="text-red-500">❌ AI 回覆解析失敗，請檢查 API Key 或 JSON 格式要求。錯誤: ${e.message}</p>`;
+                }
+            });
+        }
+
+        async function generateImage(imagePrompt) {
+            const imageContainer = document.getElementById('generatedImageContainer');
+            imageContainer.innerHTML = '<p class="text-center text-orange-500">🖼️ 正在呼叫 Imagen 3.0 生成圖片...</p>';
+            
+            const payload = { 
+                instances: [{ prompt: imagePrompt }], 
+                parameters: { "sampleCount": 1 } 
+            };
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-generate-002:predict?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (result.predictions && result.predictions.length > 0 && result.predictions[0].bytesBase64Encoded) {
+                    const base64Data = result.predictions[0].bytesBase64Encoded;
+                    const imageUrl = `data:image/png;base64,${base64Data}`;
+                    
+                    imageContainer.innerHTML = `<img src="${imageUrl}" style="width:100%; height:auto; border-radius: 8px;" alt="AI Generated Image">`;
+                    alertMessage('✅ 圖片已成功生成！', 'green');
+                } else {
+                    throw new Error('圖片生成結果結構錯誤或無圖片數據。');
+                }
+            } catch (error) {
+                imageContainer.innerHTML = `<p class="text-red-500">❌ 圖片生成失敗: ${error.message}</p>`;
+            }
+        }
+
+        document.getElementById('generateSchedule').addEventListener('click', async () => {
+            if (config.itinerary.length < 2) {
+                alertMessage('⚠️ 請先選擇至少兩個景點加入排程清單！', 'orange');
+                return;
+            }
+            if (!config.apiKey) {
+                alertMessage('❌ 請先在設定區輸入並驗證 Gemini API Key！', 'red');
+                return;
+            }
+
+            const loading = document.getElementById('scheduleLoading');
+            loading.style.display = 'flex';
+            const cityKey = config.itinerary[0].cityKey;
+            const city = config.cities[cityKey];
+
+            const itineraryDetails = config.itinerary.map((item, index) => 
+                `${index + 1}. 景點名稱: ${item.name}, 座標: ${item.coords}`
+            ).join('\n');
+            
+            const userQuery = `請你扮演 SmartTrip Core AI 智慧排程引擎。目前旅遊城市是 ${city.name}，旅遊風格是 ${city.style}，遊玩天數為 ${city.days} 天，日期是 ${config.currentDate}。請根據以下已選景點，結合**實時交通、人流狀態和當前天氣資訊**，為我生成一份最順暢、最貼心的一日旅遊動線排程。
+            
+            已選景點清單: \n${itineraryDetails}
+            
+            請確保回覆的 JSON 中包含最佳的訪問順序，並為每個景點提供簡潔的**動線建議原因**（需考慮人流、交通、風格偏好）。`;
+            
+            const systemPrompt = "您是一個專業的 AI 排程器。請根據用戶要求，使用繁體中文和嚴格的 JSON 格式回覆，並務必基於實時資訊和優化動線原則來回答。";
+
+            const payload = {
+                contents: [{ parts: [{ text: userQuery }] }],
+                tools: [{ "google_search": {} }],
+                systemInstruction: { parts: [{ text: systemPrompt }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            "city_name": { "type": "STRING" },
+                            "travel_style": { "type": "STRING" },
+                            "optimized_itinerary": {
+                                "type": "ARRAY",
+                                "items": {
+                                    "type": "OBJECT",
+                                    "properties": {
+                                        "stop_order": { "type": "INTEGER" },
+                                        "spot_name": { "type": "STRING" },
+                                        "coords": { "type": "STRING" },
+                                        "recommendation_reason": { "type": "STRING" }
+                                    },
+                                    "propertyOrdering": ["stop_order", "spot_name", "coords", "recommendation_reason"]
+                                }
+                            },
+                            "summary": { "type": "STRING", "description": "總結排程的優化原則，並提醒用戶注意實時變動。" }
+                        },
+                        "propertyOrdering": ["city_name", "travel_style", "optimized_itinerary", "summary"]
+                    }
+                }
+            };
+
+            await fetchGeminiApi(payload, (result) => {
+                loading.style.display = 'none';
+                try {
+                    const schedule = JSON.parse(result.text);
+                    displayScheduleResult(schedule);
+                } catch (e) {
+                    alertMessage(`❌ 排程 AI 回覆解析失敗。錯誤: ${e.message}`, 'red');
+                    console.error('AI Schedule failed:', e);
+                }
+            });
+        });
+        
+        function displayScheduleResult(schedule) {
+            const mapElement = document.getElementById('map');
+            const summaryHTML = `
+                <h3 class="text-xl font-bold text-red-500 mb-2">✅ AI 最佳動線已生成！</h3>
+                <p class="text-sm italic text-gray-600 mb-3">城市: ${schedule.city_name} | 風格: ${schedule.travel_style}</p>
+                <p class="text-sm italic text-gray-600 mb-3">${schedule.summary}</p>
+                <ol class="list-decimal pl-5 space-y-3">
+                    ${schedule.optimized_itinerary.map(item => `
+                        <li class="font-semibold text-gray-800">
+                            ${item.spot_name}
+                            <p class="text-xs text-gray-500 font-normal">原因: ${item.recommendation_reason}</p>
+                        </li>
+                    `).join('')}
+                </ol>
+            `;
+            mapElement.innerHTML = summaryHTML;
+            document.getElementById('spotDetail').innerHTML = '<p class="text-sm text-gray-500">請在地圖區查看 AI 生成的最佳動線。</p>';
+        }
+
+        document.getElementById('validateApiKey').addEventListener('click', async () => {
+            const apiKey = document.getElementById('apiKey').value.trim();
+            const statusText = document.getElementById('apiStatus');
+            
+            if (!apiKey) {
+                statusText.textContent = '❌ 請輸入 API Key。';
+                statusText.style.color = 'red';
+                return;
+            }
+
+            statusText.textContent = '⏳ 正在驗證 Key...';
+            statusText.style.color = 'orange';
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: "ping" }] }],
+                        config: { maxOutputTokens: 1 }
+                    })
+                });
+
+                if (response.ok || response.status === 400) { 
+                    config.apiKey = apiKey;
+                    saveConfig();
+                    statusText.textContent = '✅ API Key 驗證成功並已儲存！';
+                    statusText.style.color = 'green';
+                    if (config.currentCityKey) {
+                        fetchWeatherForecast();
+                        fetchCityRecommendations();
+                    }
+                } else {
+                    throw new Error('驗證失敗');
+                }
+            } catch (error) {
+                statusText.textContent = `❌ API Key 驗證失敗: ${error.message}`;
+                statusText.style.color = 'red';
+                console.error('API Key validation failed:', error);
+            }
+        });
+    </script>
+</body>
+</html>
